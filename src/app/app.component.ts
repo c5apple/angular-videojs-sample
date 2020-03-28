@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, ElementRef, AfterViewInit, QueryList } from '@angular/core';
 import videojs from "video.js";
 
 @Component({
@@ -8,11 +8,20 @@ import videojs from "video.js";
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('video', { static: true }) videoElement: ElementRef;
+  @ViewChildren('video') videoElement: QueryList<ElementRef>;
 
   player: any;
-  videoSrc = 'assets/AklUoM4FdU.m3u8';
-  videoPosterSrc = 'assets/AklUoM4FdU-00001.png';
+
+  videoList = [
+    {
+      videoSrc: 'assets/5gGMHy3WnP.m3u8',
+      videoPosterSrc: 'assets/5gGMHy3WnP-00001.png'
+    },
+    {
+      videoSrc: 'assets/AklUoM4FdU.m3u8',
+      videoPosterSrc: 'assets/AklUoM4FdU-00001.png'
+    }
+  ];
 
   ngOnInit(): void {
   }
@@ -22,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.videoSrc);
+    console.log('this.videoList', this.videoList);
     const options = {
       html5: {
         hls: {
@@ -37,22 +46,24 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       fluid: true
     };
 
-    console.log(this.videoElement);
-    this.player = videojs(this.videoElement.nativeElement, options, function onPlayerReady() {
-      videojs.log('Your player is ready!');
+    console.log('this.videoElement', this.videoElement);
 
-      // In this context, `this` is the player that was created by Video.js.
-      // this.play();
+    this.videoElement.forEach((videoElement, i) => {
+      this.player = videojs(videoElement.nativeElement, options, function onPlayerReady() {
+        videojs.log('Your player is ready!');
 
-      // How about an event listener?
-      this.on('ended', function () {
-        videojs.log('Awww...over so soon?!');
+        // In this context, `this` is the player that was created by Video.js.
+        // this.play();
+
+        // How about an event listener?
+        this.on('ended', function () {
+          videojs.log('Awww...over so soon?!');
+        });
       });
-    });
-    this.player.poster(this.videoPosterSrc);
-    this.player.src({ type: 'application/x-mpegURL', src: this.videoSrc });
+      this.player.poster(this.videoList[i].videoPosterSrc);
+      this.player.src({ type: 'application/x-mpegURL', src: this.videoList[i].videoSrc });
 
-    console.log(this.player);
-    // player.play();
+      console.log(this.player);
+    });
   }
 }
