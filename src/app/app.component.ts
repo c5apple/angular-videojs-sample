@@ -8,8 +8,10 @@ import videojs from "video.js";
 })
 export class AppComponent implements OnInit {
 
+  player: any;
+
   ngOnInit(): void {
-    var player = videojs("test", {
+    const options = {
       html5: {
         hls: {
           withCredentials: true
@@ -19,8 +21,22 @@ export class AppComponent implements OnInit {
         hls: {
           withCredentials: true
         }
-      }
+      },
+      fluid: true
+    };
+
+    this.player = videojs("test", options, function onPlayerReady() {
+      videojs.log('Your player is ready!');
+
+      // In this context, `this` is the player that was created by Video.js.
+      // this.play();
+
+      // How about an event listener?
+      this.on('ended', function () {
+        videojs.log('Awww...over so soon?!');
+      });
     });
+    console.log(this.player);
     // player.play();
   }
 
