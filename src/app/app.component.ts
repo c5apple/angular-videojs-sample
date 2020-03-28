@@ -9,8 +9,11 @@ import videojs from "video.js";
 export class AppComponent implements OnInit {
 
   player: any;
+  videoSrc = 'assets/AklUoM4FdU.m3u8';
+  videoPosterSrc = 'assets/AklUoM4FdU-00001.png';
 
   ngOnInit(): void {
+    console.log(this.videoSrc);
     const options = {
       html5: {
         hls: {
@@ -36,6 +39,9 @@ export class AppComponent implements OnInit {
         videojs.log('Awww...over so soon?!');
       });
     });
+    this.player.poster(this.videoPosterSrc);
+    this.player.src({ type: 'application/x-mpegURL', src: this.videoSrc });
+
     console.log(this.player);
     // player.play();
   }
