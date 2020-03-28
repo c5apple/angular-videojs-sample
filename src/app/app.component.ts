@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import videojs from "video.js";
 
 @Component({
@@ -6,7 +6,7 @@ import videojs from "video.js";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   player: any;
   videoSrc = 'assets/AklUoM4FdU.m3u8';
@@ -46,4 +46,7 @@ export class AppComponent implements OnInit {
     // player.play();
   }
 
+  ngOnDestroy(): void {
+    this.player.dispose();
+  }
 }
